@@ -1,0 +1,14 @@
+{
+  "name": "driveaccessapp",
+  "productName": "DriveAccessApp",
+  "version": "1.0.0",
+  "description": "Electron desktop app: Employee records CRUD stored as JSON in Google Drive",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^45.3.0"
+  }
+}
