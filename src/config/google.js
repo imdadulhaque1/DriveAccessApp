@@ -1,12 +1,15 @@
 // Google OAuth client of this app (type: "Desktop app").
-// Set it ONCE here; end users never see or load any file. They only click "Sign in with Google".
-//
-// Where to get these: Google Cloud Console → APIs & Services → Credentials →
-//   Create credentials → OAuth client ID → Application type "Desktop app".
-// For Desktop apps, Google does not treat the client secret as confidential (it ships inside the app).
-//
-// Values can also come from environment variables GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET.
+// Real values live in src/config/google.local.js (gitignored, never pushed).
+// Copy src/config/google.local.example.js to google.local.js and fill it in.
+// Values can also come from env vars GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET.
+let local = {};
+try {
+  local = require('./google.local');
+} catch {
+  /* no local credentials file */
+}
+
 module.exports = {
-  CLIENT_ID: process.env.GOOGLE_CLIENT_ID || 'PASTE_YOUR_CLIENT_ID.apps.googleusercontent.com',
-  CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || 'PASTE_YOUR_CLIENT_SECRET',
+  CLIENT_ID: process.env.GOOGLE_CLIENT_ID || local.CLIENT_ID || 'PASTE_YOUR_CLIENT_ID.apps.googleusercontent.com',
+  CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || local.CLIENT_SECRET || 'PASTE_YOUR_CLIENT_SECRET',
 };

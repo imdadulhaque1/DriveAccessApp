@@ -206,6 +206,13 @@ async function signIn() {
     code_verifier: verifier,
   });
   if (!data.refresh_token) throw new Error('Google did not return a refresh token. Please try again.');
+  // The consent screen has separate checkboxes; the user may have left Drive unticked.
+  if (!String(data.scope || '').includes('auth/drive.file')) {
+    await fetch(`https://oauth2.googleapis.com/revoke?token=${encodeURIComponent(data.refresh_token)}`, {
+      method: 'POST',
+    }).catch(() => {});
+    throw new Error('Google Drive permission was not granted. Sign in again and tick the Google Drive checkbox.');
+  }
   const user = userFromIdToken(data.id_token) || (await fetchUser(data.access_token));
   await saveTokens({
     access_token: data.access_token,
