@@ -18,12 +18,20 @@
     "appId": "com.driveaccess.employeerecords",
     "productName": "DriveAccessApp",
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "build"
     },
     "files": [
       "src/**/*",
+      "!src/config/*.example.js",
       "package.json"
     ],
+    "asar": true,
+    "compression": "maximum",
+    "electronLanguages": [
+      "en-US"
+    ],
+    "afterPack": "build/afterPack.js",
     "win": {
       "target": [
         {
@@ -33,12 +41,18 @@
           ]
         }
       ],
-      "signAndEditExecutable": false
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": true
     },
     "nsis": {
       "oneClick": true,
       "perMachine": false,
-      "artifactName": "DriveAccessApp-Setup-${version}.${ext}"
+      "differentialPackage": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "shortcutName": "DriveAccessApp",
+      "artifactName": "DriveAccessApp-Setup-${version}.${ext}",
+      "include": "build/installer.nsh"
     }
   }
 }

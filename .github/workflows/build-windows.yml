@@ -1,0 +1,43 @@
+name: Build Windows installer
+
+on:
+  workflow_dispatch: # run manually from the Actions tab
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Google OAuth client comes from repository secrets (never committed).
+      - name: Write Google credentials
+        shell: bash
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        run: |
+          if [ -z "$GOOGLE_CLIENT_ID" ]; then echo "::error::Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Settings > Secrets and variables > Actions"; exit 1; fi
+          cat > src/config/google.local.js <<EOF
+          module.exports = {
+            CLIENT_ID: '$GOOGLE_CLIENT_ID',
+            CLIENT_SECRET: '$GOOGLE_CLIENT_SECRET',
+          };
+          EOF
+
+      - name: Build installer
+        run: npx electron-builder --win --x64 --publish never
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DriveAccessApp-Setup
+          path: dist/*.exe
+          if-no-files-found: error
