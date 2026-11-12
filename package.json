@@ -15,7 +15,7 @@
     "electron-builder": "^26.18.0"
   },
   "build": {
-    "appId": "com.driveaccess.employeerecords",
+    "appId": "com.imdadulhaque.driveaccessapp",
     "productName": "DriveAccessApp",
     "directories": {
       "output": "dist",
